@@ -1,0 +1,11 @@
+# 忽略临时/调试文件（dashboard 目录本身要推，那是网页内容）
+dashboard/debug.png
+dashboard/*.tmp.png
+dashboard/_y_label_panel1.png
+
+__pycache__/
+*.pyc
+*.xlsx.bak
+
+# 本地工作记忆（含个人路径，不上传）
+.workbuddy/
