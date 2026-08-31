@@ -1,0 +1,42 @@
+# GitHub Pages 自动部署（静态站点，纯发布 dashboard 目录）
+#
+# 工作方式：本地跑 run_pipeline.py 生成 dashboard/ → git push → 本 workflow 自动发布。
+# Excel 数据不上传 GitHub（在坚果云本地），因此 CI 里不重新计算，只做静态发布。
+
+name: Deploy Dashboard
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dashboard
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
